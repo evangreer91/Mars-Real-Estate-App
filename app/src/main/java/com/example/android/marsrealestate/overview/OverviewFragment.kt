@@ -44,9 +44,8 @@ class OverviewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        //inflate the grid view item instead of the overview fragment
-        //this will show the grid item instead of the text view with the img url
-        val binding = GridViewItemBinding.inflate(inflater)
+        // recycler view will be in the overview fragment
+        val binding = FragmentOverviewBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
@@ -54,6 +53,8 @@ class OverviewFragment : Fragment() {
         // Giving the binding access to the OverviewViewModel
         binding.viewModel = viewModel
 
+        // set photoGridAdapter to the binding
+        binding.photosGrid.adapter = PhotoGridAdapter()
         setHasOptionsMenu(true)
         return binding.root
     }
