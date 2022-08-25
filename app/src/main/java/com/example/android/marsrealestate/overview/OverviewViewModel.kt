@@ -54,14 +54,13 @@ class OverviewViewModel : ViewModel() {
     // callback has both success and failure methods which are called depending on if retrofit is successful in fetching the JSON
 
     private fun getMarsRealEstateProperties() {
-        _response.value = "Set the Mars API Response here!"
         MarsApi.retrofitService.getProperties().enqueue(object: Callback<List<MarsProperty>> {
             // we want to return the number of properties fetched
-            override fun onResponse(call: Call<String>, response: Response<List<MarsProperty>>) {
+            override fun onResponse(call: Call<List<MarsProperty>>, response: Response<List<MarsProperty>>) {
                 _response.value = "Success: ${response.body()?.size} Mars properties retrieved"
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<List<MarsProperty>>, t: Throwable) {
                 _response.value = "Failure: " + t.message
             }
         })
