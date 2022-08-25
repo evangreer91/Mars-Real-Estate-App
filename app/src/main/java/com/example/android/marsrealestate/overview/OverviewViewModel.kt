@@ -48,10 +48,6 @@ class OverviewViewModel : ViewModel() {
     /**
      * Sets the value of the status LiveData to the Mars API status.
      */
-    // call our retrofit service
-    // call enqueue on callback to start the network request on a background thread
-    // enqueue takes a retrofit callback class as input that contains methods that will be called when the request is complete
-    // callback has both success and failure methods which are called depending on if retrofit is successful in fetching the JSON
 
     private fun getMarsRealEstateProperties() {
         MarsApi.retrofitService.getProperties().enqueue(object: Callback<List<MarsProperty>> {
