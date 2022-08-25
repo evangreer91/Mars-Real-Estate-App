@@ -42,9 +42,9 @@ private val retrofit = Retrofit.Builder()
 
 // public interface that exposes the getProperties method
 interface MarsApiService {
+    // suspend from coroutines is a job that returns a result
     @GET("realestate")
-    // update MarsApiService to return a list of MarsProperty objects
-    fun getProperties(): Call<List<MarsProperty>>
+    suspend fun getProperties(): List<MarsProperty>
 }
 
 // public api object that exposes the lazy-initialized Retrofit service
