@@ -17,4 +17,15 @@
 
 package com.example.android.marsrealestate.network
 
-class MarsProperty()
+import com.squareup.moshi.Json
+
+//Moshi needs to have a class to store the parsed JSON
+//Moshi will match the property names from the MarsProperty class with the property names from the JSON response
+
+data class MarsProperty(
+    val id: String,
+    //we use the @JSON annotation to switch the name of the property to match Kotlin style
+    @Json(name = "img_src") val imgSrcUrl: String,
+    val type: String,
+    val price: Double
+)

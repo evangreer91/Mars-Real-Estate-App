@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.marsrealestate.network.MarsApi
+import com.example.android.marsrealestate.network.MarsProperty
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,11 +54,11 @@ class OverviewViewModel : ViewModel() {
     // callback has both success and failure methods which are called depending on if retrofit is successful in fetching the JSON
 
     private fun getMarsRealEstateProperties() {
-        // TODO (05) Call the MarsApi to enqueue the Retrofit request, implementing the callbacks
         _response.value = "Set the Mars API Response here!"
-        MarsApi.retrofitService.getProperties().enqueue(object: Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                _response.value = response.body()
+        MarsApi.retrofitService.getProperties().enqueue(object: Callback<List<MarsProperty>> {
+            // we want to return the number of properties fetched
+            override fun onResponse(call: Call<String>, response: Response<List<MarsProperty>>) {
+                _response.value = "Success: ${response.body()?.size} Mars properties retrieved"
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
