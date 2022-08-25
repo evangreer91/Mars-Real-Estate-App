@@ -38,10 +38,10 @@ class OverviewViewModel : ViewModel() {
     val status: LiveData<String>
         get() = _status
 
-    // the property LiveData stores the Mars property displayed
-    private val _property = MutableLiveData<MarsProperty>()
-    val property: LiveData<MarsProperty>
-        get() = _property
+    // update to store a list of Mars properties
+    private val _properties = MutableLiveData<List<MarsProperty>>()
+    val properties: LiveData<List<MarsProperty>>
+        get() = _properties
 
     /**
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
@@ -58,9 +58,9 @@ class OverviewViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 var listResult = MarsApi.retrofitService.getProperties()
-                //set property value to first image in the list
+                //set properties value to properties list
                 if(listResult.isNotEmpty()) {
-                    _property.value = listResult[0]
+                    _properties.value = listResult
                 }
                 _status.value = "Success: ${listResult.size} Mars properties retrieved"
             } catch (e: Exception) {
