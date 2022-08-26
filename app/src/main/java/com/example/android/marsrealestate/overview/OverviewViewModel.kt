@@ -28,14 +28,22 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+// we want to add some basic error handling into the app so the user has a better idea of what happened
+// if the internet is not available, we will show our connection error icon and will show the loading animation
+// while fetching the Mars property list
+
+// we need to create a liveData in our view model to represent the status of our web request
+
+enum class MarsApiStatus { LOADING, ERROR, DONE }
+
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
 class OverviewViewModel : ViewModel() {
 
-    // the response liveData is primarily storing our errors, rename to status
-    private val _status = MutableLiveData<String>()
-    val status: LiveData<String>
+    //we change the status to type MarsApiStatus
+    private val _status = MutableLiveData<MarsApiStatus>()
+    val status: LiveData<MarsApiStatus>
         get() = _status
 
     // update to store a list of Mars properties
@@ -55,16 +63,15 @@ class OverviewViewModel : ViewModel() {
      */
 
     private fun getMarsRealEstateProperties() {
+        // update coroutine calls to update status accordingly
         viewModelScope.launch {
+            _status.value = MarsApiStatus.LOADING
             try {
-                var listResult = MarsApi.retrofitService.getProperties()
-                //set properties value to properties list
-                if(listResult.isNotEmpty()) {
-                    _properties.value = listResult
-                }
-                _status.value = "Success: ${listResult.size} Mars properties retrieved"
+                _properties.value = MarsApi.retrofitService.getProperties()
+                _status.value = MarsApiStatus.DONE
             } catch (e: Exception) {
-                _status.value = "Failure: ${e.message}"
+                _status.value = MarsApiStatus.ERROR
+                _properties.value = ArrayList()
             }
         }
     }
