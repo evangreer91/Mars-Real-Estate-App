@@ -23,9 +23,13 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 // root address of the Mars server endpoint
 private const val BASE_URL = "https://mars.udacity.com/"
+
+// create an enum to match the query values our web service expects
+enum class MarsApiFilter(val value: String) { SHOW_RENT("rent"), SHOW_BUY("buy"), SHOW_ALL("all") }
 
 // we need to create a Moshi object usng the Moshi builder
 // we need to add the Kotlin JSON adapter factory in order for moshi's annotations to work with Kotlin
@@ -42,9 +46,10 @@ private val retrofit = Retrofit.Builder()
 
 // public interface that exposes the getProperties method
 interface MarsApiService {
-    // suspend from coroutines is a job that returns a result
+    // modify the Retrofit MarsApiService for you query
+    // use @Query annotation to make the getProperties method take a string input for the filter query that the web service expects
     @GET("realestate")
-    suspend fun getProperties(): List<MarsProperty>
+    suspend fun getProperties(@Query("filter") type: String): List<MarsProperty>
 }
 
 // public api object that exposes the lazy-initialized Retrofit service
