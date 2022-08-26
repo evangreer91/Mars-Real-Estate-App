@@ -25,12 +25,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.marsrealestate.databinding.GridViewItemBinding
 import com.example.android.marsrealestate.network.MarsProperty
 
-// create a photo grid adapter
-// we are gonna extend RecyclerView list adapter, pass in the list item type, view holder and the diff util item callback
-class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback) {
-    // creates mars property view holder
-    // base view holder class requires a view in its constructor so we pass in the binding root view
-    // bind method binds the property to the binding class
+// add onClickListener class as a constructor parameter
+class PhotoGridAdapter(val onClickListener: OnClickListener) :
+    ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback) {
+
     class MarsPropertyViewHolder(private var binding: GridViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(marsProperty: MarsProperty) {
             binding.property = marsProperty
@@ -38,7 +36,6 @@ class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsProperty
         }
     }
 
-    // companion object is in the namespace of our class, but does not need a reference
     companion object DiffCallback : DiffUtil.ItemCallback<MarsProperty>() {
         override fun areItemsTheSame(oldItem: MarsProperty, newItem: MarsProperty): Boolean {
             return oldItem === newItem
@@ -49,16 +46,21 @@ class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsProperty
         }
     }
 
-    // returns a new Mars property view holder created by inflating our grid view item binding
-    // using the layout inflater from our parent view group context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoGridAdapter.MarsPropertyViewHolder {
         return MarsPropertyViewHolder(GridViewItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
-    // call getItem to get the Mars property associated with the RecyclerView position
-    // and bind it to the holder
     override fun onBindViewHolder(holder: PhotoGridAdapter.MarsPropertyViewHolder, position: Int) {
         val marsProperty = getItem(position)
+        // call onClick function from the onClickListener
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(marsProperty)
+        }
         holder.bind(marsProperty)
+    }
+
+    // create an onClickListener that creates a named onClick function
+    class OnClickListener(val clickListener: (marsProperty: MarsProperty) -> Unit) {
+        fun onClick(marsProperty:MarsProperty) = clickListener(marsProperty)
     }
 }
